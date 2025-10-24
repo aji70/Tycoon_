@@ -38,12 +38,12 @@ const HeroSection = () => {
                 />
             </div>
 
-            {/* Blockopoly */}
+            {/* Tycoon */}
             <div className="w-full h-auto absolute top-0 left-0 flex items-center justify-center">
                 <h1
                     className="text-center uppercase font-kronaOne font-normal text-transparent big-hero-text w-full text-[40px] sm:text-[40px] md:text-[80px] lg:text-[135px] relative before:absolute before:content-[''] before:w-full before:h-full before:bg-gradient-to-b before:from-transparent lg:before:via-[#010F10]/80 before:to-[#010F10] before:top-0 before:left-0 before:z-10"
                 >
-                    BLOCKOPOLY
+                    TYCOON
                 </h1>
             </div>
 
@@ -74,11 +74,11 @@ const HeroSection = () => {
                 </div>
 
                 <h1 className="block-text font-[900] font-orbitron lg:text-[116px] md:text-[98px] text-[54px] lg:leading-[120px] md:leading-[100px] leading-[60px] tracking-[-0.02em] uppercase text-[#17ffff] relative">
-                    THE BLOCK
+                    TYCOON
                     <span className='absolute top-0 left-[69%] text-[#0FF0FC] font-dmSans font-[700] md:text-[27px] text-[18px] rotate-12 animate-pulse'>?</span>
                 </h1>
 
-                <p className="w-full px-4 md:w-[70%] lg:w-[55%] text-center font-[400] md:text-[18px] text-[14px] font-dmSans text-[#F0F7F7] -tracking-[2%]">Step into Blockopoly — the Web3 twist on the classic game of strategy, ownership, and fortune. Collect tokens, complete quests, and become the ultimate blockchain tycoon.</p>
+                <p className="w-full px-4 md:w-[70%] lg:w-[55%] text-center font-[400] md:text-[18px] text-[14px] font-dmSans text-[#F0F7F7] -tracking-[2%]">Step into Tycoon — the Web3 twist on the classic game of strategy, ownership, and fortune. Collect tokens, complete quests, and become the ultimate blockchain tycoon.</p>
 
                 <div className="w-full flex flex-col justify-center items-center mt-3 gap-3">
 

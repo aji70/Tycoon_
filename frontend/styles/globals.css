@@ -199,3 +199,23 @@
 button {
   cursor: pointer;
 }
+
+.w3m-modal {
+  z-index: 10000 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+/* Force Coinbase/AppKit modal above everything */
+#walletconnect-wrapper,
+.coinbase-wallet-sdk,
+.coinbase-wallet-modal,
+.walletconnect-modal,
+.appkit-modal,
+[class*="appkit-modal"] {
+  z-index: 999999 !important;
+  position: relative !important;
+}
