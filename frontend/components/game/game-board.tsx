@@ -1,9 +1,9 @@
-import { BoardSquare } from '@/types/game';
 import React from 'react'
-import PropertyCard from './property-card';
-import SpecialCard from './special-card';
-import CornerCard from './corner-card';
+import PropertyCard from './cards/property-card';
+import SpecialCard from './cards/special-card';
+import CornerCard from './cards/corner-card';
 import { boardData } from '@/data/board-data';
+import { BoardSquare } from '@/types/game';
 
 const GameBoard = () => {
 
@@ -12,6 +12,17 @@ const GameBoard = () => {
             gridRowStart: square.gridPosition.row,
             gridColumnStart: square.gridPosition.col,
         };
+    };
+
+    // map the grid position to one of the side strings expected by child components
+    const getSideFromGridPosition = (pos: { row: number; col: number }): 'top' | 'bottom' | 'left' | 'right' => {
+        // assuming a 11x11 grid where edges are row === 1 (top), row === 11 (bottom), col === 1 (left), col === 11 (right)
+        if (pos.row === 1) return 'top';
+        if (pos.row === 11) return 'bottom';
+        if (pos.col === 1) return 'left';
+        if (pos.col === 11) return 'right';
+        // default fallback (shouldn't normally happen for board edge squares)
+        return 'top';
     };
 
     return (
@@ -33,9 +44,9 @@ const GameBoard = () => {
                     {/* Render all 40 squares from the data file */}
                     {boardData.map((square) => (
                         <div key={square.id} style={getGridPosition(square)}>
-                            {square.type === 'property' && <PropertyCard square={square} />}
-                            {square.type === 'special' && <SpecialCard square={square} />}
-                            {square.type === 'corner' && <CornerCard square={square} />}
+                            {square.type === 'property' && <PropertyCard square={{ ...square, grid_row: square.gridPosition.row, grid_col: square.gridPosition.col, position: getSideFromGridPosition(square.gridPosition) }} owner={"bank"} />}
+                            {(square.type === 'chance' || square.type === 'luxury_tax' || square.type === 'community_chest' || square.type === 'income_tax') && <SpecialCard square={{ ...square, grid_row: square.gridPosition.row, grid_col: square.gridPosition.col, position: getSideFromGridPosition(square.gridPosition) }}  />}
+                            {square.type === 'corner' && <CornerCard square={{ ...square, grid_row: square.gridPosition.row, grid_col: square.gridPosition.col, position: getSideFromGridPosition(square.gridPosition) }} />}
                         </div>
                     ))}
                 </div>

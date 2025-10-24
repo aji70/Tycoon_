@@ -27,3 +27,4 @@ export interface BoardSquare {
   gridPosition: { row: number; col: number };
   icon: string;
 }
+
