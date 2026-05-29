@@ -4,9 +4,11 @@ export {
   THEME_STORAGE_KEY,
 } from "./constants";
 export type { ResolvedTheme, ThemePreference } from "./constants";
+export { getChartPalette, getContrastRatio } from "./chart-palette";
 export {
-  DARK_CHART_PALETTE,
-  LIGHT_CHART_PALETTE,
-  getChartPalette,
-  getContrastRatio,
-} from "./chart-palette";
+  API_ERROR_SEVERITY,
+  getApiErrorTheme,
+  getApiErrorSeverity,
+  getErrorThemeTokens,
+} from "./api-error-map";
+export type { ErrorSeverity, ErrorThemeTokens } from "./api-error-map";
