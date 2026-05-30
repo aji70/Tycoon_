@@ -16,6 +16,8 @@ mod reward_transfer_flow;
 mod boost_admin_flow;
 mod boost_system_integration;
 #[cfg(test)]
+mod legacy_entrypoints;
+#[cfg(test)]
 mod security_review_checklist;
 #[cfg(test)]
 mod simulation_scenarios;
