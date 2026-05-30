@@ -29,11 +29,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = generateBaseMetadata();
 
+export const isDev = process.env.NODE_ENV === "development";
+
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children?: React.ReactNode | null;
+}>): JSX.Element {
+  const content = children ?? null;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -47,7 +51,7 @@ export default function RootLayout({
             <ThemeProvider>
               <MSWProvider />
               <AnalyticsProvider />
-              <ErrorBoundary showTechnical={process.env.NODE_ENV === "development"}>
+              <ErrorBoundary showTechnical={isDev}>
                 <Navbar />
                 <RouteFocusProvider>{children}</RouteFocusProvider>
                 <NavbarMobile />
