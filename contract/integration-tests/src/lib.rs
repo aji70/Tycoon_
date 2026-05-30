@@ -19,4 +19,5 @@ mod boost_system_integration;
 mod security_review_checklist;
 #[cfg(test)]
 mod simulation_scenarios;
+#[cfg(test)]
 mod token_reward_flow;
