@@ -11,11 +11,11 @@ import { generateBaseMetadata } from "@/lib/metadata";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { NearWalletProvider } from "@/components/providers/near-wallet-provider";
 import { PWAProvider } from "@/components/providers/pwa-provider";
+import { RouteFocusProvider } from "@/components/providers/route-focus-provider";
 import "./globals.css";
 import NavbarMobile from "@/components/shared/NavbarMobile";
 import Navbar from "@/components/shared/Navbar";
 import { MSWProvider } from "@/components/providers/msw-provider";
-import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,7 +53,7 @@ export default function RootLayout({
               <AnalyticsProvider />
               <ErrorBoundary showTechnical={isDev}>
                 <Navbar />
-                {content}
+                <RouteFocusProvider>{children}</RouteFocusProvider>
                 <NavbarMobile />
               </ErrorBoundary>
               <ToastProvider />
