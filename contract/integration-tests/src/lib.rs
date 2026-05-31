@@ -14,9 +14,13 @@ mod reward_transfer_flow;
 // Stellar Wave (SW-FE-001): simulation scenarios
 #[cfg(test)]
 mod boost_admin_flow;
+#[cfg(test)]
 mod boost_system_integration;
+#[cfg(test)]
+mod legacy_entrypoints;
 #[cfg(test)]
 mod security_review_checklist;
 #[cfg(test)]
 mod simulation_scenarios;
+#[cfg(test)]
 mod token_reward_flow;
