@@ -44,7 +44,32 @@ Returns the number of users active in the last 30 days (based on `updated_at` ti
 }
 ```
 
-#### 4. Total Games
+#### 4. Shop Analytics
+```
+GET /admin/analytics/shop
+```
+Returns shop revenue, purchase, conversion, and retention analytics:
+```json
+{
+  "totalRevenue": 12500,
+  "popularItems": [
+    {
+      "itemId": "item-1",
+      "itemName": "Sword",
+      "purchaseCount": 120,
+      "totalRevenue": 5600
+    }
+  ],
+  "conversionRate": 14.5,
+  "retentionMetrics": {
+    "day1": 82,
+    "day7": 67,
+    "day30": 42
+  }
+}
+```
+
+#### 5. Total Games
 ```
 GET /admin/analytics/games/total
 ```

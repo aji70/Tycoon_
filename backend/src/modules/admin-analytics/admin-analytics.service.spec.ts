@@ -6,6 +6,8 @@ import { AdminAnalyticsObservabilityService } from './admin-analytics-observabil
 import { User } from '../users/entities/user.entity';
 import { Game } from '../games/entities/game.entity';
 import { GamePlayer } from '../games/entities/game-player.entity';
+import { Transaction } from './entities/transaction.entity';
+import { PlayerActivity } from './entities/player-activity.entity';
 
 describe('AdminAnalyticsService', () => {
   let service: AdminAnalyticsService;
@@ -24,6 +26,15 @@ describe('AdminAnalyticsService', () => {
 
   const mockGamePlayerRepo = {
     count: jest.fn(),
+  };
+
+  const mockTransactionRepo = {
+    createQueryBuilder: jest.fn(),
+    count: jest.fn(),
+  };
+
+  const mockActivityRepo = {
+    createQueryBuilder: jest.fn(),
   };
 
   const mockObservabilityService = {
@@ -46,6 +57,14 @@ describe('AdminAnalyticsService', () => {
         {
           provide: getRepositoryToken(GamePlayer),
           useValue: mockGamePlayerRepo,
+        },
+        {
+          provide: getRepositoryToken(Transaction),
+          useValue: mockTransactionRepo,
+        },
+        {
+          provide: getRepositoryToken(PlayerActivity),
+          useValue: mockActivityRepo,
         },
         {
           provide: AdminAnalyticsObservabilityService,
@@ -140,6 +159,51 @@ describe('AdminAnalyticsService', () => {
       });
       expect(observabilityService.recordRequest).toHaveBeenCalledWith(
         'dashboard',
+        true,
+        expect.any(Number),
+      );
+    });
+  });
+
+  describe('getShopAnalytics', () => {
+    it('should return shop analytics data and record observability metrics', async () => {
+      jest.spyOn(service as any, 'getTotalRevenue').mockResolvedValue(1200);
+      jest.spyOn(service as any, 'getPopularItems').mockResolvedValue([
+        {
+          itemId: 'item-1',
+          itemName: 'Sword',
+          purchaseCount: 10,
+          totalRevenue: 500,
+        },
+      ]);
+      jest.spyOn(service as any, 'getConversionRate').mockResolvedValue(50);
+      jest.spyOn(service as any, 'getRetentionMetrics').mockResolvedValue({
+        day1: 80,
+        day7: 60,
+        day30: 40,
+      });
+
+      const result = await service.getShopAnalytics();
+
+      expect(result).toEqual({
+        totalRevenue: 1200,
+        popularItems: [
+          {
+            itemId: 'item-1',
+            itemName: 'Sword',
+            purchaseCount: 10,
+            totalRevenue: 500,
+          },
+        ],
+        conversionRate: 50,
+        retentionMetrics: {
+          day1: 80,
+          day7: 60,
+          day30: 40,
+        },
+      });
+      expect(observabilityService.recordRequest).toHaveBeenCalledWith(
+        'shop',
         true,
         expect.any(Number),
       );
