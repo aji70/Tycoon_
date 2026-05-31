@@ -86,7 +86,9 @@ export class ShopService {
         .getRepository(UserInventory)
         .find({ where: { user_id: userId } });
 
-      const ownedItemIds = new Set(userInventory.map((inv) => inv.shop_item_id));
+      const ownedItemIds = new Set(
+        userInventory.map((inv) => inv.shop_item_id),
+      );
       paginated.data = paginated.data.map((item) => ({
         ...item,
         is_owned: ownedItemIds.has(item.id),
@@ -150,7 +152,9 @@ export class ShopService {
       payment_method = 'balance',
     } = dto;
 
-    this.logger.log(`Initiating purchaseAndGift: sender ${senderId}, receiver ${receiver_id}, item ${shop_item_id}`);
+    this.logger.log(
+      `Initiating purchaseAndGift: sender ${senderId}, receiver ${receiver_id}, item ${shop_item_id}`,
+    );
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -227,7 +231,9 @@ export class ShopService {
       await queryRunner.manager.save(savedPurchase);
 
       await queryRunner.commitTransaction();
-      this.logger.log(`purchaseAndGift successful: purchase ${savedPurchase.id}, gift ${savedGift.id}`);
+      this.logger.log(
+        `purchaseAndGift successful: purchase ${savedPurchase.id}, gift ${savedGift.id}`,
+      );
 
       // 9. TODO: Notify receiver (implement notification service)
       // await this.notificationService.notifyGiftReceived(receiver_id, savedGift);

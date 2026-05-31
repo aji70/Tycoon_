@@ -62,7 +62,9 @@ export class WebhooksService {
           failureReason,
           ipAddress,
         );
-        throw new UnauthorizedException('Missing webhook signature or timestamp');
+        throw new UnauthorizedException(
+          'Missing webhook signature or timestamp',
+        );
       }
 
       // Anti-replay protection: Check timestamp tolerance
@@ -84,7 +86,9 @@ export class WebhooksService {
           failureReason,
           ipAddress,
         );
-        throw new UnauthorizedException('Webhook timestamp outside of tolerance');
+        throw new UnauthorizedException(
+          'Webhook timestamp outside of tolerance',
+        );
       }
 
       // Construct the payload for verification (standard pattern: timestamp + '.' + body)
@@ -184,7 +188,9 @@ export class WebhooksService {
     try {
       // Idempotency check: Use the webhook ID to prevent duplicate processing
       if (!webhookId) {
-        throw new UnauthorizedException('Webhook payload missing ID for idempotency');
+        throw new UnauthorizedException(
+          'Webhook payload missing ID for idempotency',
+        );
       }
 
       const idempotencyKey = `webhook:${webhookId}`;
@@ -222,7 +228,11 @@ export class WebhooksService {
       );
 
       // Audit persistence
-      await this.auditService.auditWebhookPersisted(webhookId, eventType, source);
+      await this.auditService.auditWebhookPersisted(
+        webhookId,
+        eventType,
+        source,
+      );
 
       // Log successful processing (observability)
       this.observability.logWebhookProcessed(
@@ -275,12 +285,7 @@ export class WebhooksService {
   async listEvents(
     dto: PaginationDto,
   ): Promise<PaginatedResponse<WebhookEvent>> {
-    const {
-      page = 1,
-      limit = 10,
-      sortBy,
-      sortOrder = SortOrder.ASC,
-    } = dto;
+    const { page = 1, limit = 10, sortBy, sortOrder = SortOrder.ASC } = dto;
 
     const safeSortBy =
       sortBy && ALLOWED_SORT_FIELDS.has(sortBy) ? sortBy : 'createdAt';

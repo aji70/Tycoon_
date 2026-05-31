@@ -35,7 +35,11 @@ describe('IdempotencyService', () => {
     });
 
     it('returns the stored record', async () => {
-      const record: IdempotencyRecord = { status: 'complete', response: { id: 1 }, createdAt: 1000 };
+      const record: IdempotencyRecord = {
+        status: 'complete',
+        response: { id: 1 },
+        createdAt: 1000,
+      };
       redis.get.mockResolvedValue(record);
       expect(await service.get('k1')).toEqual(record);
     });
@@ -76,7 +80,11 @@ describe('IdempotencyService', () => {
       await service.markProcessing('k1');
       const after = Date.now();
 
-      const [, record] = redis.set.mock.calls[0] as [string, IdempotencyRecord, number];
+      const [, record] = redis.set.mock.calls[0] as [
+        string,
+        IdempotencyRecord,
+        number,
+      ];
       expect(record.createdAt).toBeGreaterThanOrEqual(before);
       expect(record.createdAt).toBeLessThanOrEqual(after);
     });
@@ -84,7 +92,11 @@ describe('IdempotencyService', () => {
     it('does not include a response field', async () => {
       redis.set.mockResolvedValue(undefined);
       await service.markProcessing('k1');
-      const [, record] = redis.set.mock.calls[0] as [string, IdempotencyRecord, number];
+      const [, record] = redis.set.mock.calls[0] as [
+        string,
+        IdempotencyRecord,
+        number,
+      ];
       expect(record.response).toBeUndefined();
     });
   });
@@ -105,21 +117,33 @@ describe('IdempotencyService', () => {
     it('preserves arbitrary response shapes (array)', async () => {
       redis.set.mockResolvedValue(undefined);
       await service.markComplete('k1', [1, 2, 3]);
-      const [, record] = redis.set.mock.calls[0] as [string, IdempotencyRecord, number];
+      const [, record] = redis.set.mock.calls[0] as [
+        string,
+        IdempotencyRecord,
+        number,
+      ];
       expect(record.response).toEqual([1, 2, 3]);
     });
 
     it('preserves null response', async () => {
       redis.set.mockResolvedValue(undefined);
       await service.markComplete('k1', null);
-      const [, record] = redis.set.mock.calls[0] as [string, IdempotencyRecord, number];
+      const [, record] = redis.set.mock.calls[0] as [
+        string,
+        IdempotencyRecord,
+        number,
+      ];
       expect(record.response).toBeNull();
     });
 
     it('sets status to complete', async () => {
       redis.set.mockResolvedValue(undefined);
       await service.markComplete('k1', {});
-      const [, record] = redis.set.mock.calls[0] as [string, IdempotencyRecord, number];
+      const [, record] = redis.set.mock.calls[0] as [
+        string,
+        IdempotencyRecord,
+        number,
+      ];
       expect(record.status).toBe('complete');
     });
 

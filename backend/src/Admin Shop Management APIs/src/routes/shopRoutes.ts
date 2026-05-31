@@ -9,7 +9,12 @@ const router = Router();
 // Helpers
 // ---------------------------------------------------------------------------
 
-const SORTABLE_FIELDS: SortableField[] = ['name', 'price', 'createdAt', 'updatedAt'];
+const SORTABLE_FIELDS: SortableField[] = [
+  'name',
+  'price',
+  'createdAt',
+  'updatedAt',
+];
 const SORT_ORDERS: SortOrder[] = ['asc', 'desc'];
 
 function parsePositiveInt(value: unknown, fallback: number): number {
@@ -71,7 +76,9 @@ router.get('/', (req: Request, res: Response) => {
   const limit = parsePositiveInt(req.query.limit, 20);
 
   const sortByRaw = req.query.sortBy as string;
-  const sortBy: SortableField = SORTABLE_FIELDS.includes(sortByRaw as SortableField)
+  const sortBy: SortableField = SORTABLE_FIELDS.includes(
+    sortByRaw as SortableField,
+  )
     ? (sortByRaw as SortableField)
     : 'createdAt';
 
@@ -80,7 +87,13 @@ router.get('/', (req: Request, res: Response) => {
     ? (sortOrderRaw as SortOrder)
     : 'asc';
 
-  const result = shopService.getItems({ activeOnly, page, limit, sortBy, sortOrder });
+  const result = shopService.getItems({
+    activeOnly,
+    page,
+    limit,
+    sortBy,
+    sortOrder,
+  });
   res.json(result);
 });
 

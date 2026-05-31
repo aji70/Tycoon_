@@ -125,12 +125,16 @@ export class AuthService {
     return null;
   }
 
-  async login(user: {
-    id: number;
-    email: string;
-    role: string;
-    is_admin: boolean;
-  }, ipAddress?: string, userAgent?: string) {
+  async login(
+    user: {
+      id: number;
+      email: string;
+      role: string;
+      is_admin: boolean;
+    },
+    ipAddress?: string,
+    userAgent?: string,
+  ) {
     const payload = {
       sub: user.id,
       email: user.email,
@@ -138,7 +142,11 @@ export class AuthService {
       is_admin: user.is_admin,
     };
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = await this.createRefreshToken(Number(user.id), ipAddress, userAgent);
+    const refreshToken = await this.createRefreshToken(
+      Number(user.id),
+      ipAddress,
+      userAgent,
+    );
 
     this.authAudit.record(AuthAuditEvent.LOGIN_SUCCESS, {
       userId: user.id,
@@ -153,7 +161,12 @@ export class AuthService {
     };
   }
 
-  async walletLogin(address: string, chain: string, ipAddress?: string, userAgent?: string) {
+  async walletLogin(
+    address: string,
+    chain: string,
+    ipAddress?: string,
+    userAgent?: string,
+  ) {
     if (!address || !chain) {
       throw new BadRequestException('Address and chain are required');
     }
@@ -176,7 +189,11 @@ export class AuthService {
       is_admin: user.is_admin,
     };
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = await this.createRefreshToken(user.id, ipAddress, userAgent);
+    const refreshToken = await this.createRefreshToken(
+      user.id,
+      ipAddress,
+      userAgent,
+    );
 
     this.authAudit.record(AuthAuditEvent.WALLET_LOGIN_SUCCESS, {
       userId: user.id,
@@ -312,7 +329,11 @@ export class AuthService {
     };
   }
 
-  async logout(userId: number, ipAddress?: string, userAgent?: string): Promise<void> {
+  async logout(
+    userId: number,
+    ipAddress?: string,
+    userAgent?: string,
+  ): Promise<void> {
     await this.refreshTokenRepository.update(
       { userId, isRevoked: false },
       { isRevoked: true },

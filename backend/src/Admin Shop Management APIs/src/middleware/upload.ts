@@ -14,19 +14,28 @@ if (!fs.existsSync(uploadDir)) {
 // ---------------------------------------------------------------------------
 // Allowed MIME types (both header declaration and extension must match)
 // ---------------------------------------------------------------------------
-const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+const ALLOWED_MIME = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+]);
 
 // ---------------------------------------------------------------------------
 // Executable magic-byte patterns that must never be stored, regardless of the
 // declared MIME type or file extension.
 // ---------------------------------------------------------------------------
-const EXECUTABLE_SIGNATURES: Array<{ label: string; offset: number; bytes: number[] }> = [
-  { label: 'ELF',       offset: 0, bytes: [0x7f, 0x45, 0x4c, 0x46] },
-  { label: 'MZ/PE',     offset: 0, bytes: [0x4d, 0x5a] },
+const EXECUTABLE_SIGNATURES: Array<{
+  label: string;
+  offset: number;
+  bytes: number[];
+}> = [
+  { label: 'ELF', offset: 0, bytes: [0x7f, 0x45, 0x4c, 0x46] },
+  { label: 'MZ/PE', offset: 0, bytes: [0x4d, 0x5a] },
   { label: 'Mach-O BE', offset: 0, bytes: [0xca, 0xfe, 0xba, 0xbe] },
   { label: 'Mach-O LE', offset: 0, bytes: [0xce, 0xfa, 0xed, 0xfe] },
   { label: 'Mach-O 64', offset: 0, bytes: [0xcf, 0xfa, 0xed, 0xfe] },
-  { label: 'shebang',   offset: 0, bytes: [0x23, 0x21] }, // #!
+  { label: 'shebang', offset: 0, bytes: [0x23, 0x21] }, // #!
 ];
 
 function hasExecutableMagic(buf: Buffer): string | null {
@@ -63,7 +72,9 @@ const fileFilter = (
   const allowedExts = new Set(['jpeg', 'jpg', 'png', 'gif', 'webp']);
 
   if (!ALLOWED_MIME.has(file.mimetype) || !allowedExts.has(ext)) {
-    return cb(new Error('Only JPEG, PNG, GIF, and WebP image files are allowed'));
+    return cb(
+      new Error('Only JPEG, PNG, GIF, and WebP image files are allowed'),
+    );
   }
 
   cb(null, true);
@@ -113,7 +124,9 @@ export function rejectExecutables(
     const label = hasExecutableMagic(header);
     if (label) {
       safeUnlink(file.path);
-      return next(new Error(`Executable file content (${label}) is not allowed`));
+      return next(
+        new Error(`Executable file content (${label}) is not allowed`),
+      );
     }
   }
 
