@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
 import { AdminAnalyticsService } from './admin-analytics.service';
+import { AdminAnalyticsObservabilityService } from './admin-analytics-observability.service';
 import { User } from '../users/entities/user.entity';
 import { Game } from '../games/entities/game.entity';
 import { GamePlayer } from '../games/entities/game-player.entity';
@@ -11,6 +12,7 @@ describe('AdminAnalyticsService', () => {
   let userRepo: Repository<User>;
   let gameRepo: Repository<Game>;
   let gamePlayerRepo: Repository<GamePlayer>;
+  let observabilityService: AdminAnalyticsObservabilityService;
 
   const mockUserRepo = {
     count: jest.fn(),
@@ -22,6 +24,11 @@ describe('AdminAnalyticsService', () => {
 
   const mockGamePlayerRepo = {
     count: jest.fn(),
+  };
+
+  const mockObservabilityService = {
+    recordRequest: jest.fn(),
+    logEndpoint: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -40,6 +47,10 @@ describe('AdminAnalyticsService', () => {
           provide: getRepositoryToken(GamePlayer),
           useValue: mockGamePlayerRepo,
         },
+        {
+          provide: AdminAnalyticsObservabilityService,
+          useValue: mockObservabilityService,
+        },
       ],
     }).compile();
 
@@ -48,6 +59,9 @@ describe('AdminAnalyticsService', () => {
     gameRepo = module.get<Repository<Game>>(getRepositoryToken(Game));
     gamePlayerRepo = module.get<Repository<GamePlayer>>(
       getRepositoryToken(GamePlayer),
+    );
+    observabilityService = module.get<AdminAnalyticsObservabilityService>(
+      AdminAnalyticsObservabilityService,
     );
   });
 
@@ -124,6 +138,11 @@ describe('AdminAnalyticsService', () => {
         totalGames: 200,
         totalGamePlayers: 400,
       });
+      expect(observabilityService.recordRequest).toHaveBeenCalledWith(
+        'dashboard',
+        true,
+        expect.any(Number),
+      );
     });
   });
 });

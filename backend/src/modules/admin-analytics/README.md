@@ -122,6 +122,14 @@ admin-analytics/
 └── README.md                       # This file
 ```
 
+## Observability
+
+The admin analytics module now records runtime analytics events and duration metrics through the backend observability stack.
+
+- Metrics exposed via Prometheus-style counters and histograms
+- Request lifecycle traces recorded with debug-level logging
+- Admin analytics endpoints can be monitored for success and failure rates
+
 ## Integration
 
 The module is registered in `app.module.ts`:
