@@ -157,5 +157,82 @@ mod inner {
         pub fn tyc_balance(&self, addr: &Address) -> i128 {
             self.tyc.balance(addr)
         }
+
+        /// USDC balance of any address.
+        pub fn usdc_balance(&self, addr: &Address) -> i128 {
+            TokenClient::new(&self.env, &self.usdc_id).balance(addr)
+        }
+
+        /// Mint TYC to an address (admin operation).
+        pub fn mint_tyc(&self, to: &Address, amount: i128) {
+            StellarAssetClient::new(&self.env, &self.tyc_id).mint(to, &amount);
+        }
+
+        /// Mint USDC to an address (admin operation).
+        pub fn mint_usdc(&self, to: &Address, amount: i128) {
+            StellarAssetClient::new(&self.env, &self.usdc_id).mint(to, &amount);
+        }
+
+        /// Transfer TYC from one address to another.
+        pub fn transfer_tyc(&self, from: &Address, to: &Address, amount: i128) {
+            self.tyc.transfer(from, to, &amount);
+        }
+
+        /// Get the current ledger sequence number.
+        pub fn current_ledger(&self) -> u32 {
+            self.env.ledger().sequence()
+        }
+
+        /// Advance ledger by a number of sequences.
+        pub fn advance_ledger(&self, sequences: u32) {
+            use soroban_sdk::testutils::{Ledger, LedgerInfo};
+            let current = self.env.ledger().get();
+            self.env.ledger().set(LedgerInfo {
+                sequence_number: current.sequence_number + sequences,
+                timestamp: current.timestamp + (sequences as u64 * 5),
+                ..current
+            });
+        }
+
+        /// Set ledger to a specific sequence number.
+        pub fn set_ledger(&self, sequence: u32) {
+            use soroban_sdk::testutils::{Ledger, LedgerInfo};
+            let current = self.env.ledger().get();
+            self.env.ledger().set(LedgerInfo {
+                sequence_number: sequence,
+                timestamp: sequence as u64 * 5,
+                ..current
+            });
+        }
+
+        /// Create a new player address (for dynamic test scenarios).
+        pub fn new_player(&self) -> Address {
+            Address::generate(&self.env)
+        }
+
+        /// Get all active boost IDs for a player.
+        pub fn get_boost_ids(&self, player: &Address) -> Vec<u128> {
+            let boosts = self.boost_system.get_active_boosts(player);
+            let mut ids = Vec::new(&self.env);
+            for i in 0..boosts.len() {
+                if let Some(boost) = boosts.get(i) {
+                    ids.push_back(boost.id);
+                }
+            }
+            ids
+        }
+
+        /// Check if a specific boost id is active for a player.
+        pub fn has_boost(&self, player: &Address, boost_id: u128) -> bool {
+            let boosts = self.boost_system.get_active_boosts(player);
+            for i in 0..boosts.len() {
+                if let Some(boost) = boosts.get(i) {
+                    if boost.id == boost_id {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
     }
 }
