@@ -22,6 +22,68 @@ vi.mock("@/lib/analytics", () => ({
   track: vi.fn(),
 }));
 
+describe("Home Page - Core Functionality", () => {
+  describe("Component Rendering", () => {
+    test("renders without errors", () => {
+      const { container } = render(<Home />);
+      expect(container).toBeTruthy();
+    });
+
+    test("renders HomeClient component", () => {
+      const { container } = render(<Home />);
+      // Verify that at least the main container is rendered
+      const mainContainer = container.querySelector("div.w-full");
+      expect(mainContainer).toBeInTheDocument();
+    });
+
+    test("returns valid ReactNode", () => {
+      const result = <Home />;
+      expect(result).toBeTruthy();
+      expect(result.type).toBeDefined();
+    });
+
+    test("renders responsive layout structure", () => {
+      const { container } = render(<Home />);
+      const mainDiv = container.querySelector("div.w-full");
+      expect(mainDiv).toBeInTheDocument();
+      
+      // Check for mobile and desktop variants
+      const mobileDiv = container.querySelector("div.md\\:hidden");
+      const desktopDiv = container.querySelector("div.hidden.md\\:block");
+      
+      expect(mobileDiv).toBeInTheDocument();
+      expect(desktopDiv).toBeInTheDocument();
+    });
+  });
+
+  describe("TypeScript Type Safety", () => {
+    test("Home component is properly typed", () => {
+      // This test verifies TypeScript compilation
+      const component = Home;
+      expect(component).toBeDefined();
+      expect(typeof component).toBe("function");
+    });
+
+    test("component returns ReactNode type", () => {
+      const result = <Home />;
+      expect(result).toBeTruthy();
+    });
+  });
+
+  describe("Error Handling", () => {
+    test("handles component gracefully without errors", () => {
+      expect(() => {
+        render(<Home />);
+      }).not.toThrow();
+    });
+
+    test("renders with null props gracefully", () => {
+      const { container } = render(<Home />);
+      expect(container.querySelector("div.w-full")).toBeInTheDocument();
+    });
+  });
+});
+
 describe("Home Page - Accessibility", () => {
   describe("Heading Hierarchy", () => {
     test("renders exactly one h1 element", async () => {

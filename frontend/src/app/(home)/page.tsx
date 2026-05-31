@@ -1,4 +1,6 @@
-// app/page.tsx
+// app/(home)/page.tsx
+// Server component that renders the main home page
+import type { ReactNode } from "react";
 import HomeClient from "@/clients/HomeClient";
 import { generatePageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -17,6 +19,14 @@ export const metadata: Metadata = generatePageMetadata({
   ],
 });
 
-export default function Home(): React.ReactElement {
+/**
+ * Home Page Component
+ * 
+ * Server component that renders the main home page with client-side interactive elements.
+ * Handles metadata generation and delegates interactive content to HomeClient.
+ * 
+ * @returns {ReactNode} The rendered home page
+ */
+export default function Home(): ReactNode {
   return <HomeClient />;
 }
