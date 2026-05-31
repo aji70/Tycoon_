@@ -89,6 +89,28 @@ describe("Home Page - Accessibility", () => {
       const links = container.querySelectorAll("a[href]");
       expect(buttons.length + links.length).toBeGreaterThan(0);
     });
+
+    test("renders a skip link targeting the home content region", async () => {
+      render(<Home />);
+      const skipLink = screen.getByRole("link", { name: "Skip to home content" });
+      expect(skipLink).toHaveAttribute("href", "#home-page-content");
+    });
+
+    test("skip link appears before the main home content in DOM order", async () => {
+      render(<Home />);
+      const skipLink = screen.getByRole("link", { name: "Skip to home content" });
+      const mainContent = screen.getByRole("region", { name: "Home page content" });
+
+      const focusableElements = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+
+      expect(focusableElements.indexOf(skipLink)).toBeLessThan(
+        focusableElements.indexOf(mainContent),
+      );
+    });
   });
 
   describe("Semantic Structure", () => {
@@ -128,6 +150,12 @@ describe("Home Page - Accessibility", () => {
       const { container } = render(<Home />);
       const sections = container.querySelectorAll("section");
       expect(sections.length).toBeGreaterThan(0);
+    });
+
+    test("home page has a main landmark with an accessible label", async () => {
+      render(<Home />);
+      const main = screen.getByRole("main");
+      expect(main).toHaveAttribute("aria-label", "Tycoon home page");
     });
   });
 });
