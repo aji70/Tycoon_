@@ -71,7 +71,10 @@ describe('Webhooks Observability Integration', () => {
   });
 
   it('processes valid webhook and emits metrics', async () => {
-    const payload = { id: 'evt_test_observability_123', type: 'payment.succeeded' };
+    const payload = {
+      id: 'evt_test_observability_123',
+      type: 'payment.succeeded',
+    };
     const body = Buffer.from(JSON.stringify(payload));
     const timestamp = Math.floor(Date.now() / 1000).toString();
     const signature = crypto
@@ -79,7 +82,12 @@ describe('Webhooks Observability Integration', () => {
       .update(`${timestamp}.${body.toString()}`)
       .digest('hex');
 
-    const valid = await service.verifySignature(signature, timestamp, body, 'stripe');
+    const valid = await service.verifySignature(
+      signature,
+      timestamp,
+      body,
+      'stripe',
+    );
     expect(valid).toBe(true);
 
     const result = await service.processWebhook(payload, 'stripe');

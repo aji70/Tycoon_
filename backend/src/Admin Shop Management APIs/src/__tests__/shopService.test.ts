@@ -163,19 +163,28 @@ describe('ShopService', () => {
     });
 
     it('should sort by name descending', () => {
-      const result = shopService.getItems({ sortBy: 'name', sortOrder: 'desc' });
+      const result = shopService.getItems({
+        sortBy: 'name',
+        sortOrder: 'desc',
+      });
       const names = result.items.map((i) => i.name);
       expect(names).toEqual(['Zebra', 'Mango', 'Apple']);
     });
 
     it('should sort by price ascending', () => {
-      const result = shopService.getItems({ sortBy: 'price', sortOrder: 'asc' });
+      const result = shopService.getItems({
+        sortBy: 'price',
+        sortOrder: 'asc',
+      });
       const prices = result.items.map((i) => i.price);
       expect(prices).toEqual([10, 20, 30]);
     });
 
     it('should sort by price descending', () => {
-      const result = shopService.getItems({ sortBy: 'price', sortOrder: 'desc' });
+      const result = shopService.getItems({
+        sortBy: 'price',
+        sortOrder: 'desc',
+      });
       const prices = result.items.map((i) => i.price);
       expect(prices).toEqual([30, 20, 10]);
     });
@@ -191,16 +200,31 @@ describe('ShopService', () => {
       shopService.clearAll();
       // All items have the same price — stable sort must preserve id order
       const a = shopService.createItem({
-        name: 'A', description: 'Test', price: 50, isActive: true, images: [],
+        name: 'A',
+        description: 'Test',
+        price: 50,
+        isActive: true,
+        images: [],
       });
       const b = shopService.createItem({
-        name: 'B', description: 'Test', price: 50, isActive: true, images: [],
+        name: 'B',
+        description: 'Test',
+        price: 50,
+        isActive: true,
+        images: [],
       });
       const c = shopService.createItem({
-        name: 'C', description: 'Test', price: 50, isActive: true, images: [],
+        name: 'C',
+        description: 'Test',
+        price: 50,
+        isActive: true,
+        images: [],
       });
 
-      const result = shopService.getItems({ sortBy: 'price', sortOrder: 'asc' });
+      const result = shopService.getItems({
+        sortBy: 'price',
+        sortOrder: 'asc',
+      });
       const ids = result.items.map((i) => i.id);
       expect(ids).toEqual([a.id, b.id, c.id]);
     });

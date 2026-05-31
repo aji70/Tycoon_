@@ -146,8 +146,12 @@ describe('Shop Item CRUD', () => {
     });
 
     it('should return the correct slice for page 2', async () => {
-      const page1 = await request(app).get('/api/shop?page=1&limit=2&sortBy=price&sortOrder=asc');
-      const page2 = await request(app).get('/api/shop?page=2&limit=2&sortBy=price&sortOrder=asc');
+      const page1 = await request(app).get(
+        '/api/shop?page=1&limit=2&sortBy=price&sortOrder=asc',
+      );
+      const page2 = await request(app).get(
+        '/api/shop?page=2&limit=2&sortBy=price&sortOrder=asc',
+      );
 
       expect(page1.body.items[0].price).toBe(10);
       expect(page2.body.items[0].price).toBe(30);
@@ -199,7 +203,9 @@ describe('Shop Item CRUD', () => {
     });
 
     it('should sort by name ascending', async () => {
-      const response = await request(app).get('/api/shop?sortBy=name&sortOrder=asc');
+      const response = await request(app).get(
+        '/api/shop?sortBy=name&sortOrder=asc',
+      );
 
       expect(response.status).toBe(200);
       const names = response.body.items.map((i: any) => i.name);
@@ -207,7 +213,9 @@ describe('Shop Item CRUD', () => {
     });
 
     it('should sort by name descending', async () => {
-      const response = await request(app).get('/api/shop?sortBy=name&sortOrder=desc');
+      const response = await request(app).get(
+        '/api/shop?sortBy=name&sortOrder=desc',
+      );
 
       expect(response.status).toBe(200);
       const names = response.body.items.map((i: any) => i.name);
@@ -215,14 +223,18 @@ describe('Shop Item CRUD', () => {
     });
 
     it('should sort by price ascending', async () => {
-      const response = await request(app).get('/api/shop?sortBy=price&sortOrder=asc');
+      const response = await request(app).get(
+        '/api/shop?sortBy=price&sortOrder=asc',
+      );
 
       const prices = response.body.items.map((i: any) => i.price);
       expect(prices).toEqual([10, 20, 30]);
     });
 
     it('should sort by price descending', async () => {
-      const response = await request(app).get('/api/shop?sortBy=price&sortOrder=desc');
+      const response = await request(app).get(
+        '/api/shop?sortBy=price&sortOrder=desc',
+      );
 
       const prices = response.body.items.map((i: any) => i.price);
       expect(prices).toEqual([30, 20, 10]);
@@ -237,7 +249,9 @@ describe('Shop Item CRUD', () => {
     });
 
     it('should ignore an invalid sortOrder value and fall back to asc', async () => {
-      const response = await request(app).get('/api/shop?sortBy=price&sortOrder=random');
+      const response = await request(app).get(
+        '/api/shop?sortBy=price&sortOrder=random',
+      );
 
       expect(response.status).toBe(200);
       const prices = response.body.items.map((i: any) => i.price);

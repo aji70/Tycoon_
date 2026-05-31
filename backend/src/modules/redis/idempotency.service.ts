@@ -21,8 +21,14 @@ export class IdempotencyService {
     return this.redis.get<IdempotencyRecord>(this.key(idempotencyKey));
   }
 
-  async markProcessing(idempotencyKey: string, ttl = DEFAULT_TTL): Promise<void> {
-    const record: IdempotencyRecord = { status: 'processing', createdAt: Date.now() };
+  async markProcessing(
+    idempotencyKey: string,
+    ttl = DEFAULT_TTL,
+  ): Promise<void> {
+    const record: IdempotencyRecord = {
+      status: 'processing',
+      createdAt: Date.now(),
+    };
     await this.redis.set(this.key(idempotencyKey), record, ttl * 1000);
   }
 
