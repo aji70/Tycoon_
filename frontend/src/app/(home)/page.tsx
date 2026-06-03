@@ -1,4 +1,6 @@
-// app/page.tsx
+// app/(home)/page.tsx
+// Server component that renders the main home page
+import type { ReactNode } from "react";
 import HomeClient from "@/clients/HomeClient";
 import { generatePageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
