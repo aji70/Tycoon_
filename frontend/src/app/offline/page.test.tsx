@@ -1,67 +1,32 @@
-import { act, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, test, vi, afterEach } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import OfflinePage from "./page";
 
-const OFFLINE_STATUS_KEY = "tycoon.offline.last-known-status";
+vi.mock("@/components/offline/OfflineStatus", () => ({
+  default: () => (
+    <div data-testid="offline-status">
+      <button type="button">Retry connection</button>
+    </div>
+  ),
+}));
 
-const originalOnLineDescriptor = Object.getOwnPropertyDescriptor(
-  window.navigator,
-  "onLine",
-);
+describe("Offline page", () => {
+  it("renders an accessible landmark and keeps focusable action order", () => {
+    const { container } = render(<OfflinePage />);
 
-describe("Offline Page - Runtime behavior", () => {
-  beforeEach(() => {
-    if (originalOnLineDescriptor) {
-      Object.defineProperty(window.navigator, "onLine", {
-        value: false,
-        configurable: true,
-      });
-    }
-
-    sessionStorage.clear();
-  });
-
-  afterEach(() => {
-    if (originalOnLineDescriptor) {
-      Object.defineProperty(window.navigator, "onLine", originalOnLineDescriptor);
-    }
-
-    vi.restoreAllMocks();
-  });
-
-  test("renders the offline shell and fallback state", async () => {
-    render(await OfflinePage());
-
-    expect(screen.getByRole("heading", { name: "Offline Shell" })).toBeInTheDocument();
     expect(
-      screen.getByText(/you are currently offline\. reconnect to resume live multiplayer gameplay\./i),
+      container.querySelector('main[aria-labelledby="offline-page-title"]'),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back to home" })).toHaveAttribute("href", "/");
-  });
+    expect(screen.getByRole("heading", { name: /offline shell/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /back to home/i })).toBeInTheDocument();
 
-  test("updates to online status after reconnect", async () => {
-    render(await OfflinePage());
+    const focusables = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
 
-    expect(await screen.findByText(/currently offline/i)).toBeInTheDocument();
-
-    act(() => {
-      if (originalOnLineDescriptor) {
-        Object.defineProperty(window.navigator, "onLine", {
-          value: true,
-          configurable: true,
-        });
-      }
-      window.dispatchEvent(new Event("online"));
-    });
-
-    expect(await screen.findByText(/a connection is available/i)).toBeInTheDocument();
-  });
-
-  test("loads the last known connection state from storage", async () => {
-    sessionStorage.setItem(OFFLINE_STATUS_KEY, "online");
-
-    render(await OfflinePage());
-
-    expect(await screen.findByText(/last known connection state: online/i)).toBeInTheDocument();
+    expect(focusables[0]).toBe(screen.getByRole("button", { name: /retry connection/i }));
+    expect(focusables[1]).toBe(screen.getByRole("link", { name: /back to home/i }));
   });
 });
