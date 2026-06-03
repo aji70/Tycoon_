@@ -428,4 +428,4 @@ mod security_review_tests;
 #[cfg(test)]
 mod simulation_scenarios;
 #[cfg(test)]
-mod simulation_scenarios;
+mod integration_coverage;

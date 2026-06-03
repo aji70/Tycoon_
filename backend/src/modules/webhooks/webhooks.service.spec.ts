@@ -55,7 +55,10 @@ describe('WebhooksService', () => {
         { provide: WebhooksObservabilityService, useValue: observability },
         { provide: WebhooksAuditService, useValue: auditService },
         { provide: getRepositoryToken(WebhookEvent), useValue: repo },
-        { provide: ConfigService, useValue: new ConfigService({ WEBHOOK_SECRET: 'test_secret' }) },
+        {
+          provide: ConfigService,
+          useValue: new ConfigService({ WEBHOOK_SECRET: 'test_secret' }),
+        },
       ],
     }).compile();
 
@@ -94,7 +97,7 @@ describe('WebhooksService', () => {
         Buffer.from(body),
         'stripe',
       );
-      
+
       expect(result).toBe(true);
       expect(observability.logSignatureVerification).toHaveBeenCalledWith(
         'stripe',
@@ -115,7 +118,7 @@ describe('WebhooksService', () => {
         Buffer.from(body),
         'stripe',
       );
-      
+
       expect(result).toBe(false);
       expect(observability.logSignatureVerification).toHaveBeenCalledWith(
         'stripe',
@@ -130,7 +133,12 @@ describe('WebhooksService', () => {
       const body = JSON.stringify({ test: 'data' });
 
       await expect(
-        service.verifySignature('signature', oldTimestamp, Buffer.from(body), 'stripe'),
+        service.verifySignature(
+          'signature',
+          oldTimestamp,
+          Buffer.from(body),
+          'stripe',
+        ),
       ).rejects.toThrow('Webhook timestamp outside of tolerance');
 
       expect(observability.logSignatureVerification).toHaveBeenCalledWith(
@@ -168,9 +176,17 @@ describe('WebhooksService', () => {
       const result = await service.processWebhook(payload, 'stripe');
 
       expect(result).toEqual({ received: true, processed: true });
-      expect(redisService.set).toHaveBeenCalledWith('webhook:evt_123', true, 604800);
+      expect(redisService.set).toHaveBeenCalledWith(
+        'webhook:evt_123',
+        true,
+        604800,
+      );
       expect(repo.save).toHaveBeenCalledWith(
-        expect.objectContaining({ eventId: 'evt_123', eventType: 'payment.succeeded', source: 'stripe' }),
+        expect.objectContaining({
+          eventId: 'evt_123',
+          eventType: 'payment.succeeded',
+          source: 'stripe',
+        }),
       );
 
       // Verify observability calls
@@ -229,12 +245,14 @@ describe('WebhooksService', () => {
     it('should log processing failure on database error', async () => {
       const payload = { id: 'evt_123', type: 'payment.succeeded' };
       const dbError = new Error('Database connection failed');
-      
+
       redisService.get.mockResolvedValue(null);
       redisService.set.mockResolvedValue(undefined);
       repo.save.mockRejectedValue(dbError);
 
-      await expect(service.processWebhook(payload, 'stripe')).rejects.toThrow(dbError);
+      await expect(service.processWebhook(payload, 'stripe')).rejects.toThrow(
+        dbError,
+      );
 
       expect(observability.logWebhookProcessingFailed).toHaveBeenCalledWith(
         {
@@ -281,7 +299,10 @@ describe('WebhooksService', () => {
       const qb = buildQb([], 0);
       repo.createQueryBuilder.mockReturnValue(qb);
 
-      await service.listEvents({ sortBy: 'createdAt', sortOrder: SortOrder.DESC });
+      await service.listEvents({
+        sortBy: 'createdAt',
+        sortOrder: SortOrder.DESC,
+      });
 
       expect(qb.orderBy).toHaveBeenCalledWith('we.createdAt', SortOrder.DESC);
       expect(qb.addOrderBy).toHaveBeenCalledWith('we.id', 'ASC');

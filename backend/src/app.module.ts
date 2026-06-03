@@ -55,7 +55,15 @@ import { NotificationsModule } from './modules/fetch-notification/notifications.
     // Configuration Module
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, gameConfig, jwtConfig, redisConfig, uploadConfig, nearConfig],
+      load: [
+        appConfig,
+        databaseConfig,
+        gameConfig,
+        jwtConfig,
+        redisConfig,
+        uploadConfig,
+        nearConfig,
+      ],
       envFilePath: '.env',
       validationSchema,
       // Report ALL missing/invalid vars at once instead of stopping at the first.

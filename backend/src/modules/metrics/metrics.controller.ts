@@ -10,7 +10,7 @@ import { AuditAction } from '../audit-trail/entities/audit-trail.entity';
 @SkipThrottle()
 @Controller('metrics')
 export class MetricsController {
-  constructor(private readonly httpMetrics: HttpMetricsService) { }
+  constructor(private readonly httpMetrics: HttpMetricsService) {}
 
   @Get()
   @UseInterceptors(AuditTrailInterceptor)

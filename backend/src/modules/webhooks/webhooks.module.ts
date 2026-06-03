@@ -16,7 +16,15 @@ import { LoggerModule } from '../../common/logger/logger.module';
     TypeOrmModule.forFeature([WebhookEvent, WebhookAuditLog]),
   ],
   controllers: [WebhooksController],
-  providers: [WebhooksService, WebhooksObservabilityService, WebhooksAuditService],
-  exports: [WebhooksService, WebhooksObservabilityService, WebhooksAuditService],
+  providers: [
+    WebhooksService,
+    WebhooksObservabilityService,
+    WebhooksAuditService,
+  ],
+  exports: [
+    WebhooksService,
+    WebhooksObservabilityService,
+    WebhooksAuditService,
+  ],
 })
 export class WebhooksModule {}
