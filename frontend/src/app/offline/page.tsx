@@ -1,5 +1,6 @@
-import type React from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { WifiOff } from "lucide-react";
 import { generatePageMetadata } from "@/lib/metadata";
 import OfflineStatus from "@/components/offline/OfflineStatus";
 

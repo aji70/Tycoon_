@@ -27,7 +27,7 @@ function writePersistedStatus(status: NetworkStatus): void {
   sessionStorage.setItem(OFFLINE_STATUS_KEY, status);
 }
 
-export default function OfflinePageContent(): JSX.Element {
+export default function OfflinePageContent(): React.JSX.Element {
   const [connectionStatus, setConnectionStatus] = useState<NetworkStatus>("unknown");
   const [lastKnownStatus, setLastKnownStatus] = useState<NetworkStatus>("unknown");
 

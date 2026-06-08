@@ -424,8 +424,8 @@ mod access_control_tests;
 #[cfg(test)]
 mod deprecation_tests;
 #[cfg(test)]
+mod integration_coverage;
+#[cfg(test)]
 mod security_review_tests;
 #[cfg(test)]
 mod simulation_scenarios;
-#[cfg(test)]
-mod integration_coverage;

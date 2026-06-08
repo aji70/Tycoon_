@@ -1,13 +1,13 @@
 "use client";
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { lazy, useEffect, useRef, useState, useCallback } from "react";
 import { Dices, Gamepad2 } from "lucide-react";
-import { TypeAnimation } from "react-type-animation";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { useHeroTelemetry } from "@/hooks/useHeroTelemetry";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { sanitizeError } from "@/lib/errors";
 import { HERO_I18N } from "@/lib/hero/i18n-keys";
+import { useHeroPerformanceBudget } from "@/lib/hero-perf-budget";
 
 // #834: Lazy-load TypeAnimation to reduce initial bundle size
 const TypeAnimation = lazy(() =>
@@ -33,8 +33,8 @@ const subSpeed = 30;
 const HeroSection: React.FC<HeroSectionProps> = ({ className, router: routerProp }) => {
   const router = routerProp ?? useRouter();
   const { t } = useTranslation("common");
-  const { fire } = useHeroTelemetry();
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const { trackHeroViewed, trackCtaClicked } = useHeroTelemetry();
+  const prefersReducedMotion = useReducedMotion();
   const [error, setError] = useState<HeroErrorState>({ hasError: false, message: "" });
   const tryAgainRef = useRef<HTMLButtonElement>(null);
 
@@ -210,7 +210,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className, router: routerProp
           <button
             data-testid="hero-primary-cta"
             aria-label={t(HERO_I18N.buttons.continueGame)}
-            onClick={() => handleTrackedNavigation("continue_game_click", "/game-settings")}
+            onClick={() => handleTrackedNavigation("continue_game", "/game-settings")}
             className="relative group w-[300px] h-[56px] bg-transparent border-none p-0 overflow-hidden cursor-pointer transition-transform group-hover:scale-105"
           >
             <svg
@@ -238,7 +238,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className, router: routerProp
           {/* Multiplayer */}
           <button
             aria-label={t(HERO_I18N.buttons.multiplayer)}
-            onClick={() => handleTrackedNavigation("multiplayer_click", "/game-settings")}
+            onClick={() => handleTrackedNavigation("multiplayer", "/game-settings")}
             className="relative group w-[227px] h-[40px] bg-transparent border-none p-0 overflow-hidden cursor-pointer"
           >
             <svg
@@ -267,7 +267,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className, router: routerProp
           {/* Join Room */}
           <button
             aria-label={t(HERO_I18N.buttons.joinRoom)}
-            onClick={() => handleTrackedNavigation("join_room_click", "/join-room")}
+            onClick={() => handleTrackedNavigation("join_room", "/join-room")}
             className="relative group w-[140px] h-[40px] bg-transparent border-none p-0 overflow-hidden cursor-pointer"
           >
             <svg
@@ -296,7 +296,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className, router: routerProp
           {/* Challenge AI */}
           <button
             aria-label={t(HERO_I18N.buttons.challengeAI)}
-            onClick={() => handleTrackedNavigation("challenge_ai_click", "/play-ai")}
+            onClick={() => handleTrackedNavigation("challenge_ai", "/play-ai")}
             className="relative group w-[260px] h-[52px] bg-transparent border-none p-0 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-105"
           >
             <svg

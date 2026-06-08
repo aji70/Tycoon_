@@ -31,7 +31,11 @@ pub fn emit_player_registered(env: &Env, player: &Address) {
 
 /// Emit an OwnershipTransferred event
 pub fn emit_ownership_transferred(env: &Env, old_owner: &Address, new_owner: &Address) {
-    let topics = (Symbol::new(env, "OwnershipTransferred"), old_owner, new_owner);
+    let topics = (
+        Symbol::new(env, "OwnershipTransferred"),
+        old_owner,
+        new_owner,
+    );
     #[allow(deprecated)]
     env.events().publish(topics, ());
 }

@@ -35,7 +35,7 @@ mod inner {
     use soroban_sdk::{
         testutils::Address as _,
         token::{Client as TokenClient, StellarAssetClient},
-        Address, Env,
+        Address, Env, Vec,
     };
     use tycoon_boost_system::{TycoonBoostSystem, TycoonBoostSystemClient};
     use tycoon_game::TycoonContractClient;
@@ -60,6 +60,7 @@ mod inner {
         }
     }
 
+    #[allow(dead_code)]
     pub struct Fixture<'a> {
         pub env: Env,
         // Accounts
@@ -82,6 +83,7 @@ mod inner {
         pub boost_system: TycoonBoostSystemClient<'a>,
     }
 
+    #[allow(dead_code)]
     impl Fixture<'_> {
         pub fn new() -> Self {
             let env = Env::default();
@@ -179,6 +181,7 @@ mod inner {
         }
 
         /// Get the current ledger sequence number.
+        #[allow(dead_code)]
         pub fn current_ledger(&self) -> u32 {
             self.env.ledger().sequence()
         }

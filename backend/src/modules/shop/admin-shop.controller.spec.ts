@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Reflector } from '@nestjs/core';
 import { AdminShopController } from './admin-shop.controller';
 import { ShopService } from './shop.service';
+import { AuditTrailService } from '../audit-trail/audit-trail.service';
 import { UpdateShopPriceDto } from './dto/update-shop-price.dto';
 import { UpdateShopItemStatusDto } from './dto/update-shop-item-status.dto';
 import { BulkUpdateShopItemsDto } from './dto/bulk-update-shop-items.dto';
@@ -36,6 +38,8 @@ describe('AdminShopController', () => {
           provide: ShopService,
           useValue: mockShopService,
         },
+        { provide: AuditTrailService, useValue: { log: jest.fn() } },
+        { provide: Reflector, useValue: { get: jest.fn() } },
       ],
     }).compile();
 
